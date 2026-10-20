@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">The Super Agent</string>
+    <string name="accessibility_desc">Lets The Super Agent observe app-open events for automations and perform gesture control. No data leaves the device.</string>
+    <string name="channel_voice">Super Agent Voice</string>
+    <string name="notif_listening">Listening for \"Hey Super Agent\"</string>
+</resources>

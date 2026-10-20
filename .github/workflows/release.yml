@@ -1,0 +1,94 @@
+name: Release APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Fix bugs — clean cache, gradle available, chmod gradlew if present
+        run: |
+          rm -rf ~/.gradle/caches/modules-2/files-2.1 2>/dev/null || true
+          if [ -f gradlew ]; then chmod +x gradlew; fi
+          if [ ! -f gradlew ]; then
+            curl -sL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip
+            unzip -q /tmp/gradle.zip -d /opt
+            echo "/opt/gradle-8.7/bin" >> $GITHUB_PATH
+          fi
+
+      - name: Build debug APK
+        run: |
+          if [ -f gradlew ]; then ./gradlew assembleDebug --stacktrace --no-daemon; else gradle assembleDebug --stacktrace --no-daemon; fi
+
+      - name: Rename APKs
+        run: |
+          VER=$(grep -o 'versionName = "[^"]*"' app/build.gradle.kts | cut -d'"' -f2)
+          DATE=$(date +%Y%m%d)
+          cp app/build/outputs/apk/debug/app-debug.apk TheSuperAgent-Latest.apk
+          cp app/build/outputs/apk/debug/app-debug.apk TheSuperAgent-v${VER}-${DATE}.apk
+
+      - name: Delete old releases (keep history clean)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release list --limit 100 --json tagName --jq '.[].tagName' | while read -r tag; do
+            gh release delete "$tag" --yes --cleanup-tag || true
+          done
+          git push origin --delete $(git tag -l) 2>/dev/null || true
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}-${{ github.sha }}
+          name: The Super Agent v${{ github.run_number }}
+          body: |
+            ## The Super Agent — build ${{ github.run_number }}
+            **Owner:** inayat ullah · **Device target:** Redmi 15C (HyperOS)
+
+            ### Features
+            - Standalone OpenRouter intelligence (encrypted key store, model picker, offline fallback)
+            - Voice Super Agent: wake word "Hey Super Agent", ur-PK / it-IT / en-US STT+TTS, foreground mic service
+            - Device Control Hub: 40+ tools (apps, URLs, search, maps, volume, flashlight, DND, clipboard, contacts, calendar, alarms, QR, camera, battery, usage)
+            - WhatsApp auto-reply (NotificationListener + RemoteInput, official API only)
+            - Spotify Super Control (MediaSession)
+            - Automation Engine V2 (NL tasks, 6 triggers, 6 templates, flow states)
+            - App Builder Pro (Kotlin/Compose + React + Node generation, ZIP export, GitHub push)
+            - 12 super features v4-v5 (SmartBattery, AppLock, FileVault, AINotes, ScreenTime, CallScreener, LiveTranslate, GestureControl, DriveMode, SleepMode, SmartGallery, PrivacyShield)
+            - Premium 10-tab UI (#050A14 + #00E5FF)
+
+            ### Install
+            1. Download `TheSuperAgent-Latest.apk`
+            2. Allow install from unknown sources
+            3. Open app → grant permissions → Settings tab → paste OpenRouter API key
+            4. HyperOS: Autostart ON, Battery No restrictions, Notification access ON, Accessibility ON, Overlay ON, Usage access ON
+
+            ### Bugfixes in this line
+            - NotificationListener Android 14 null-extras guard
+            - HyperOS foreground service FOREGROUND_SERVICE_IMMEDIATE + fallback
+            - EncryptedSharedPreferences Redmi keystore bug → custom MasterKey alias + plain-prefs fallback
+            - MediaSession graceful permission fail, Spotify art OOM downsample
+            - Gradle/Termux chmod fix, accessibility config flags
+          files: |
+            TheSuperAgent-Latest.apk
+            TheSuperAgent-v*-*.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-agent-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
