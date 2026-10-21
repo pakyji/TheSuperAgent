@@ -69,6 +69,9 @@ class VoiceService : Service(), TextToSpeech.OnInitListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Must call startForeground within 5 s of startForegroundService (Android 8+),
+        // even when beginListening() bails out early (battery low, no recognizer, etc.).
+        startForegroundNotif()
         when (intent?.action) {
             ACTION_START, ACTION_RESUME -> { paused = false; beginListening() }
             ACTION_PAUSE -> { paused = true; stopRecognizer(); notifyState() }
@@ -105,7 +108,7 @@ class VoiceService : Service(), TextToSpeech.OnInitListener {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, currentLang.stt)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         }
-        sr.setListener(object : RecognitionListener {
+        sr.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(p: android.os.Bundle?) { listening = true; micLive = true; notifyState() }
             override fun onBeginningOfSpeech() {}
             override fun onRmsChanged(v: Float) {}

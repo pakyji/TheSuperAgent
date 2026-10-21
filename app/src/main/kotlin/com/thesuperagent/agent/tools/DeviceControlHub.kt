@@ -271,7 +271,7 @@ object DeviceControlHub {
         val action = when (page) {
             "wifi" -> Settings.ACTION_WIFI_SETTINGS
             "bt" -> Settings.ACTION_BLUETOOTH_SETTINGS
-            "battery" -> Settings.ACTION_BATTERY_SETTINGS
+            "battery" -> Settings.ACTION_BATTERY_SAVER_SETTINGS
             "apps" -> Settings.ACTION_APPLICATION_SETTINGS
             "notif" -> "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"
             "access" -> Settings.ACTION_ACCESSIBILITY_SETTINGS

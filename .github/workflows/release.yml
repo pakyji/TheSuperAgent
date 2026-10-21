@@ -30,19 +30,13 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" "cmdline-tools;latest"
 
-      - name: Fix bugs — clean cache, gradle available, chmod gradlew if present
+      - name: Prepare Gradle wrapper
         run: |
           rm -rf ~/.gradle/caches/modules-2/files-2.1 2>/dev/null || true
-          if [ -f gradlew ]; then chmod +x gradlew; fi
-          if [ ! -f gradlew ]; then
-            curl -sL -o /tmp/gradle.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip
-            unzip -q /tmp/gradle.zip -d /opt
-            echo "/opt/gradle-8.7/bin" >> $GITHUB_PATH
-          fi
+          chmod +x gradlew
 
       - name: Build debug APK
-        run: |
-          if [ -f gradlew ]; then ./gradlew assembleDebug --stacktrace --no-daemon; else gradle assembleDebug --stacktrace --no-daemon; fi
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: Rename APKs
         run: |

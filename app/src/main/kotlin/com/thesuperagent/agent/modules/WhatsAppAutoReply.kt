@@ -88,7 +88,7 @@ object WhatsAppAutoReply {
                     .replace("{sender}", sender)
                     .replace("{time}", SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()))
                 for (action in actions) {
-                    val ris = android.app.Notification.getRemoteInputs(action) ?: continue
+                    val ris = action.remoteInputs ?: continue
                     val results = android.os.Bundle()
                     ris.forEach { ri -> results.putString(ri.resultKey, reply) }
                     val intent = Intent()

@@ -1,6 +1,6 @@
 # 🤖 The Super Agent
 
-![Build](https://github.com/OWNER_PLACEHOLDER/super-agent/actions/workflows/release.yml/badge.svg)
+![Build](https://github.com/pakyji/TheSuperAgent/actions/workflows/release.yml/badge.svg)
 ![Version](https://img.shields.io/badge/version-5.0-00E5FF)
 ![Android](https://img.shields.io/badge/Android-8.0%2B-3DDC84)
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-7F52FF)
@@ -76,10 +76,9 @@ Dark futuristic `#050A14` + cyan `#00E5FF`, animated orbs, voice visualizer. Eve
 
 ```bash
 pkg install git openjdk-17 zip -y
-git clone https://github.com/OWNER_PLACEHOLDER/super-agent && cd super-agent
-curl -sL -o g.zip https://services.gradle.org/distributions/gradle-8.7-bin.zip && unzip -q g.zip
+git clone https://github.com/pakyji/TheSuperAgent && cd TheSuperAgent
 export JAVA_HOME=$PREFIX/opt/openjdk17
-../gradle-8.7/bin/gradle assembleDebug --stacktrace --no-daemon
+./gradlew assembleDebug --stacktrace --no-daemon
 # APK: app/build/outputs/apk/debug/app-debug.apk
 ```
 
