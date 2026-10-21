@@ -42,6 +42,28 @@ object SecurePrefs {
         get() = prefs.getString("model", "openai/gpt-4o-mini") ?: "openai/gpt-4o-mini"
         set(v) = prefs.edit().putString("model", v).apply()
 
+    /** Pollinations key is optional: a free key from enter.pollinations.ai/keys. */
+    var pollinationsKey: String
+        get() = prefs.getString("pl_key", "") ?: ""
+        set(v) = prefs.edit().putString("pl_key", v.trim()).apply()
+
+    var pollModel: String
+        get() = prefs.getString("pl_model", "openai") ?: "openai"
+        set(v) = prefs.edit().putString("pl_model", v).apply()
+
+    /** "openrouter" or "pollinations". Existing OpenRouter users keep OpenRouter. */
+    var provider: String
+        get() = prefs.getString("provider", null)
+            ?: if (openRouterKey.isNotBlank()) "openrouter" else "pollinations"
+        set(v) = prefs.edit().putString("provider", v).apply()
+
+    /** Model for the active provider. */
+    var activeModel: String
+        get() = if (provider == "openrouter") model else pollModel
+        set(v) {
+            if (provider == "openrouter") model = v else pollModel = v
+        }
+
     var personality: String
         get() = prefs.getString("personality", DEFAULT_PERSONALITY) ?: DEFAULT_PERSONALITY
         set(v) = prefs.edit().putString("personality", v).apply()

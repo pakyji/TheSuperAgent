@@ -161,7 +161,9 @@ fun LogsTab(vm: AgentViewModel) {
 fun SettingsTab(vm: AgentViewModel) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
     var key by remember { mutableStateOf(SecurePrefs.openRouterKey) }
-    var model by remember { mutableStateOf(SecurePrefs.model) }
+    var plKey by remember { mutableStateOf(SecurePrefs.pollinationsKey) }
+    var provider by remember { mutableStateOf(SecurePrefs.provider) }
+    var model by remember { mutableStateOf(SecurePrefs.activeModel) }
     var ghToken by remember { mutableStateOf(SecurePrefs.githubToken) }
     var ghRepo by remember { mutableStateOf(SecurePrefs.githubRepo) }
     val models by vm.models.collectAsState()
@@ -169,6 +171,34 @@ fun SettingsTab(vm: AgentViewModel) {
     Column(Modifier.padding(10.dp)) {
         PanelBox {
             Text("Settings", color = Cyan)
+            Text("Provider: " + (if (provider == "openrouter") "OpenRouter" else "Pollinations (free)"),
+                color = TextDim)
+            Row {
+                ActionButton("Pollinations (free)", {
+                    provider = "pollinations"; SecurePrefs.provider = provider
+                    model = SecurePrefs.activeModel; vm.refreshModels()
+                })
+                ActionButton("OpenRouter", {
+                    provider = "openrouter"; SecurePrefs.provider = provider
+                    model = SecurePrefs.activeModel; vm.refreshModels()
+                })
+            }
+            Spacer(Modifier.height(4.dp))
+            Text("Pollinations key (optional, FREE: enter.pollinations.ai/keys). Blank = keyless endpoint:",
+                color = TextDim)
+            OutlinedTextField(plKey, { plKey = it }, Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextMain, unfocusedTextColor = TextMain,
+                    focusedBorderColor = Cyan, unfocusedBorderColor = PanelBorder),
+                placeholder = { Text("sk_... (optional)", color = TextDim) })
+            Row {
+                ActionButton("Save Pollinations key", {
+                    SecurePrefs.pollinationsKey = plKey
+                    SecurePrefs.provider = "pollinations"; provider = "pollinations"
+                    model = SecurePrefs.activeModel; vm.refreshModels()
+                })
+            }
+            Spacer(Modifier.height(6.dp))
             Text("OpenRouter API key (EncryptedSharedPreferences AES256-GCM" +
                 (if (SecurePrefs.usingFallback) " — FALLBACK prefs (Redmi keystore bug)" else "") + "):",
                 color = TextDim)
@@ -180,11 +210,10 @@ fun SettingsTab(vm: AgentViewModel) {
                 ActionButton("Save key", { SecurePrefs.openRouterKey = key; vm.refreshModels() })
             }
             Spacer(Modifier.height(6.dp))
-            Text("Model:", color = TextDim)
-            var mSel by remember { mutableStateOf(model) }
+            Text("Model (" + provider + "):", color = TextDim)
             FlowRowSafe {
                 models.take(12).forEach { m ->
-                    ActionButton(m.substringAfterLast('/'), { mSel = m; SecurePrefs.model = m; model = m })
+                    ActionButton(m.substringAfterLast('/'), { SecurePrefs.activeModel = m; model = m })
                 }
             }
             Spacer(Modifier.height(6.dp))
