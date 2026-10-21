@@ -21,6 +21,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Fix bugs — clean cache, gradle available, chmod gradlew if present
         run: |
           rm -rf ~/.gradle/caches/modules-2/files-2.1 2>/dev/null || true
