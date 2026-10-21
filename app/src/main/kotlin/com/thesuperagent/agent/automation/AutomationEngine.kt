@@ -36,7 +36,7 @@ object AutomationEngine {
     val tasks = MutableStateFlow<List<AutoTask>>(emptyList())
 
     val templates = listOf(
-        "Morning Routine" to "TIME|07:00|speak Good morning inayat, here is your day summary; open calendar",
+        "Morning Routine" to "TIME|07:00|speak Good morning pakyji, here is your day summary; open calendar",
         "Night Mode" to "TIME|23:00|set brightness 20; set dnd on",
         "Focus Mode" to "MANUAL||set dnd on; speak Focus mode on",
         "Drive Mode" to "APP_OPEN|com.google.android.maps|set dnd on; speak Driving mode active",

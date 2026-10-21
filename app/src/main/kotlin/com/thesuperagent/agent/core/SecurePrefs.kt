@@ -68,5 +68,5 @@ object SecurePrefs {
     fun setString(key: String, v: String) = prefs.edit().putString(key, v).apply()
 
     const val DEFAULT_PERSONALITY =
-        "You are The Super Agent, ultimate Android assistant for inayat, Redmi 15C. Respond in user's language."
+        "You are The Super Agent, ultimate Android assistant for pakyji, Redmi 15C. Respond in user's language."
 }

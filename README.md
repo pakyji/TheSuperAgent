@@ -6,7 +6,7 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-7F52FF)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**The Super Agent** — ultimate Android AI super agent for **inayat ullah**, built for **Redmi 15C (HyperOS)**.
+**The Super Agent** — ultimate Android AI super agent for **pakyji**, built for **Redmi 15C (HyperOS)**.
 Pure Super Agent identity. No JARVIS. No backend. No root. Phone-only development (Termux).
 
 ---
@@ -125,7 +125,7 @@ JDK 17 → Gradle 8.7 → `assembleDebug` → rename → delete old releases/tag
 Fork → branch → PR. Keep it root-free and official-API-only.
 
 ## 📄 License
-MIT © inayat ullah
+MIT © pakyji
 
 ---
-**Author:** inayat ullah · **Identity:** The Super Agent (never JARVIS)
+**Author:** pakyji · **Identity:** The Super Agent (never JARVIS)

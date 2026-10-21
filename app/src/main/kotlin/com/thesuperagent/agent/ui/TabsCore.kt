@@ -161,7 +161,7 @@ fun AutomationsTab(vm: AgentViewModel) {
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = TextMain, unfocusedTextColor = TextMain,
                     focusedBorderColor = Cyan, unfocusedBorderColor = PanelBorder),
-                placeholder = { Text("At 8 PM remind me to call inayat…", color = TextDim) })
+                placeholder = { Text("At 8 PM remind me to call pakyji…", color = TextDim) })
             Row {
                 ActionButton("Create", {
                     if (nl.isNotBlank()) { AutomationEngine.createFromText(nl); nl = "" }
@@ -199,7 +199,7 @@ fun FlowRowSafe(content: @Composable () -> Unit) {
 }
 
 private fun templateToNl(name: String): String = when (name) {
-    "Morning Routine" -> "At 7:00 AM speak Good morning inayat, here is your day summary"
+    "Morning Routine" -> "At 7:00 AM speak Good morning pakyji, here is your day summary"
     "Night Mode" -> "At 11:00 PM set brightness 20; set dnd on"
     "Focus Mode" -> "set dnd on; speak Focus mode on"
     "Drive Mode" -> "when i open maps set dnd on; speak Driving mode active"

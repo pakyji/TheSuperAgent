@@ -30,7 +30,7 @@ object WhatsAppAutoReply {
 
     var replyTemplate: String
         get() = SecurePrefs.string("wa_template",
-            "Hi {sender}! I'm busy right now — The Super Agent will make sure inayat replies soon. ({time})")
+            "Hi {sender}! I'm busy right now — The Super Agent will make sure pakyji replies soon. ({time})")
         set(v) = SecurePrefs.setString("wa_template", v)
 
     var onlyWhen: OnlyWhen

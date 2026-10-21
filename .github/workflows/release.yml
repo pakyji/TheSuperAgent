@@ -58,7 +58,7 @@ jobs:
           name: The Super Agent v${{ github.run_number }}
           body: |
             ## The Super Agent — build ${{ github.run_number }}
-            **Owner:** inayat ullah · **Device target:** Redmi 15C (HyperOS)
+            **Owner:** pakyji · **Device target:** Redmi 15C (HyperOS)
 
             ### Features
             - Standalone OpenRouter intelligence (encrypted key store, model picker, offline fallback)

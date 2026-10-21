@@ -8,7 +8,7 @@ import com.thesuperagent.agent.core.SecurePrefs
 
 /**
  * The Super Agent — application entry.
- * Identity: pure Super Agent (never JARVIS). Owner: inayat ullah.
+ * Identity: pure Super Agent (never JARVIS). Owner: pakyji.
  */
 class SuperAgentApp : Application() {
     override fun onCreate() {

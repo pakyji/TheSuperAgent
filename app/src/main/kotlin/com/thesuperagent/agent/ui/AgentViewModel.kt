@@ -90,7 +90,7 @@ class AgentViewModel(app: Application) : AndroidViewModel(app) {
             }
             "flashlight" in low -> DeviceControlHub.toggleFlashlight()
             "volume" in low -> { DeviceControlHub.volumeUp(); "volume up" }
-            else -> "Offline mode: internet ya API key check karo. Device tools phir bhi kaam karte hain — try: open youtube / battery / remind me at 8 pm call inayat."
+            else -> "Offline mode: internet ya API key check karo. Device tools phir bhi kaam karte hain — try: open youtube / battery / remind me at 8 pm call pakyji."
         }
     }
 
