@@ -2,7 +2,7 @@
 
 ## v5.0 (2026-10-18)
 - Initial public source drop: full Super Agent identity (no JARVIS lineage).
-- Standalone OpenRouter intelligence with EncryptedSharedPreferences (AES256-GCM) + Redmi 15C keystore fallback.
+- Standalone OpenRouter intelligence with EncryptedSharedPreferences (AES256-GCM) + keystore fallback.
 - Voice Super Agent: foreground mic service `super_agent_voice_v4`, wake word "Hey Super Agent", ur-PK/it-IT/en-US.
 - Device Control Hub with 40+ tools.
 - WhatsApp auto-reply via NotificationListener + RemoteInput (official API only).
@@ -12,4 +12,4 @@
 - 12 super features v4–v5.
 - Premium 10-tab Compose UI (#050A14 / #00E5FF).
 - GitHub auto-release workflow with old-release cleanup.
-- Bugfix pack: Android 14 notification null-extras, HyperOS FGS immediacy, keystore fallback, MediaSession grace, Spotify art OOM, Termux gradle chmod, accessibility flags.
+- Bugfix pack: Android 14 notification null-extras, foreground-service start fallback, keystore fallback, MediaSession grace, Spotify art OOM, Termux gradle chmod, accessibility flags.

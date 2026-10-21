@@ -7,7 +7,7 @@ import androidx.security.crypto.MasterKey
 
 /**
  * EncryptedSharedPreferences (AES256-GCM) with a custom MasterKey alias and a
- * plain-prefs fallback for the Redmi 15C keystore bug. No key ever hardcoded.
+ * plain-prefs fallback if the Android keystore fails. No key ever hardcoded.
  */
 object SecurePrefs {
     private const val FILE = "super_agent_secure"
@@ -90,5 +90,5 @@ object SecurePrefs {
     fun setString(key: String, v: String) = prefs.edit().putString(key, v).apply()
 
     const val DEFAULT_PERSONALITY =
-        "You are The Super Agent, ultimate Android assistant for pakyji, Redmi 15C. Respond in user's language."
+        "You are The Super Agent, ultimate Android assistant for pakyji. Respond in user's language."
 }

@@ -3,6 +3,8 @@ package com.thesuperagent.agent.ui
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +19,7 @@ import com.thesuperagent.agent.modules.SpotifySuperControl
 import com.thesuperagent.agent.services.NotificationReaderService
 import com.thesuperagent.agent.tools.DeviceControlHub
 import com.thesuperagent.agent.voice.VoiceService
+import kotlinx.coroutines.delay
 
 @Composable
 fun PanelBox(content: @Composable ColumnScope.() -> Unit) {
@@ -79,8 +82,20 @@ fun ChatTab(vm: AgentViewModel) {
 fun VoiceTab(vm: AgentViewModel) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
     var running by remember { mutableStateOf(VoiceServiceStart.running) }
+    var heard by remember { mutableStateOf("") }
+    var voiceErr by remember { mutableStateOf("") }
+    var ttsState by remember { mutableStateOf("") }
+    LaunchedEffect(Unit) {
+        while (true) {
+            heard = VoiceService.lastTranscript
+            voiceErr = VoiceService.lastError
+            ttsState = VoiceService.ttsStatus
+            running = VoiceServiceStart.running
+            delay(1000)
+        }
+    }
     val levels = remember { List(16) { (kotlin.math.sin(it * 0.7f.toDouble()).toFloat() + 1.2f) / 2.4f } }
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
                 AnimatedOrb(active = running)
@@ -116,8 +131,17 @@ fun VoiceTab(vm: AgentViewModel) {
                     ctx.startService(Intent(ctx, VoiceService::class.java)
                         .setAction(VoiceService.ACTION_PTT))
                 })
+                ActionButton("Test voice", {
+                    ctx.startService(Intent(ctx, VoiceService::class.java)
+                        .setAction(VoiceService.ACTION_TEST))
+                })
             }
             Spacer(Modifier.height(6.dp))
+            Text("heard: " + heard.ifBlank { "—" }, color = TextMain)
+            Text("status: " + voiceErr.ifBlank { "ok" }, color = TextDim)
+            Text(ttsState.ifBlank { "tts: —" }, color = TextDim)
+            Spacer(Modifier.height(6.dp))
+            Text("Wake word \"Hey Super Agent\" ke baad 15 second tak bina wake word ke bhi command de sakte ho.", color = TextDim)
             Text("mic privacy: notification shows 🔴 MIC LIVE jab mic khula ho", color = TextDim)
         }
         PanelBox {
@@ -154,7 +178,7 @@ object VoiceServiceStart { var running = false }
 fun AutomationsTab(vm: AgentViewModel) {
     val tasks by vm.tasks.collectAsState()
     var nl by remember { mutableStateOf("") }
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Text("Automation Engine V2", color = Cyan)
             OutlinedTextField(nl, { nl = it }, Modifier.fillMaxWidth(),
@@ -175,8 +199,8 @@ fun AutomationsTab(vm: AgentViewModel) {
                 }
             }
         }
-        LazyColumn {
-            items(tasks) { t ->
+        Column {
+            tasks.forEach { t ->
                 PanelBox {
                     Row {
                         Column(Modifier.weight(1f)) {
@@ -213,7 +237,7 @@ fun AppBuilderTab(vm: AgentViewModel) {
     var prompt by remember { mutableStateOf("") }
     var last by remember { mutableStateOf("") }
     val logs by vm.builderLogs.collectAsState()
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Text("App Builder Pro", color = Cyan)
             OutlinedTextField(prompt, { prompt = it }, Modifier.fillMaxWidth(),
@@ -236,8 +260,8 @@ fun AppBuilderTab(vm: AgentViewModel) {
             Spacer(Modifier.height(4.dp))
             AppBuilderPro.suggestions(prompt).forEach { Text("• $it", color = TextDim) }
         }
-        LazyColumn {
-            items(logs) { l -> Text(l, color = TextMain, modifier = Modifier.padding(2.dp)) }
+        Column {
+            logs.forEach { l -> Text(l, color = TextMain, modifier = Modifier.padding(2.dp)) }
         }
     }
 }
@@ -246,7 +270,7 @@ fun AppBuilderTab(vm: AgentViewModel) {
 @Composable
 fun DeviceTab(vm: AgentViewModel) {
     var out by remember { mutableStateOf("") }
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Text("Device Control Hub", color = Cyan)
             Text(out, color = TextMain)

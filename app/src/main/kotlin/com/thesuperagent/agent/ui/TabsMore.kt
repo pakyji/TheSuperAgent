@@ -1,6 +1,8 @@
 package com.thesuperagent.agent.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -69,7 +71,7 @@ fun ToolsTab(vm: AgentViewModel) {
     var q by remember { mutableStateOf("") }
     val tOut by vm.toolOut.collectAsState()
     val ctx = androidx.compose.ui.platform.LocalContext.current
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Text("Super Tools v4–v5", color = Cyan)
             Text(out, color = TextMain)
@@ -168,7 +170,7 @@ fun SettingsTab(vm: AgentViewModel) {
     var ghRepo by remember { mutableStateOf(SecurePrefs.githubRepo) }
     val models by vm.models.collectAsState()
     var wake by remember { mutableStateOf(SecurePrefs.wakeWordEnabled) }
-    Column(Modifier.padding(10.dp)) {
+    Column(Modifier.padding(10.dp).verticalScroll(rememberScrollState())) {
         PanelBox {
             Text("Settings", color = Cyan)
             Text("Provider: " + (if (provider == "openrouter") "OpenRouter" else "Pollinations (free)"),
@@ -200,7 +202,7 @@ fun SettingsTab(vm: AgentViewModel) {
             }
             Spacer(Modifier.height(6.dp))
             Text("OpenRouter API key (EncryptedSharedPreferences AES256-GCM" +
-                (if (SecurePrefs.usingFallback) " — FALLBACK prefs (Redmi keystore bug)" else "") + "):",
+                (if (SecurePrefs.usingFallback) " — FALLBACK prefs" else "") + "):",
                 color = TextDim)
             OutlinedTextField(key, { key = it }, Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -239,7 +241,7 @@ fun SettingsTab(vm: AgentViewModel) {
                     SecurePrefs.githubToken = ghToken; SecurePrefs.githubRepo = ghRepo
                 })
                 ActionButton("Permission guide", {
-                    // opens HyperOS app settings page for this app
+                    // opens this app's system settings page
                     runCatching {
                         ctx.startActivity(
                             android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -248,7 +250,7 @@ fun SettingsTab(vm: AgentViewModel) {
                 })
             }
             Spacer(Modifier.height(6.dp))
-            Text("HyperOS: Autostart ON · Battery No restrictions · Notification access ON · " +
+            Text("Phone settings: Autostart ON · Battery No restrictions · Notification access ON · " +
                 "Accessibility ON · Overlay ON · Usage access ON", color = TextDim)
         }
     }

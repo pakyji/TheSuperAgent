@@ -6,7 +6,7 @@
 ![Kotlin](https://img.shields.io/badge/Kotlin-1.9.22-7F52FF)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
-**The Super Agent** — ultimate Android AI super agent for **pakyji**, built for **Redmi 15C (HyperOS)**.
+**The Super Agent** — ultimate Android AI super agent for **pakyji**. Works on any Android 8.0+ phone.
 Pure Super Agent identity. No JARVIS. No backend. No root. Phone-only development (Termux).
 
 ---
@@ -22,7 +22,7 @@ Every push to `main` auto-builds and replaces the release (tag `v<run>-<sha>`).
 ## ✨ 50+ Features
 
 ### 🧠 Standalone Intelligence
-- 🔑 Direct OpenRouter API calls from device — key in **EncryptedSharedPreferences (AES256-GCM)**, with plain-prefs fallback for Redmi 15C keystore bug
+- 🔑 Direct OpenRouter API calls from device — key in **EncryptedSharedPreferences (AES256-GCM)**, with plain-prefs fallback if the keystore fails
 - 🎛️ Model picker (default `openai/gpt-4o-mini`)
 - 📴 Offline fallback: device control, automation, app building work without internet
 - 💾 Persistent memory (Room DB) + configurable personality
@@ -87,9 +87,9 @@ export JAVA_HOME=$PREFIX/opt/openjdk17
 `.github/workflows/release.yml` runs on push to `main` + manual dispatch:
 JDK 17 → Gradle 8.7 → `assembleDebug` → rename → delete old releases/tags → new release `v<run>-<sha>` with `TheSuperAgent-Latest.apk`.
 
-## 📱 Redmi 15C (HyperOS) Setup
-1. Settings → Apps → Manage apps → **The Super Agent** → **Autostart ON**
-2. Battery → **No restrictions** (app + Termux)
+## 📱 Android Setup (any phone)
+1. Settings → Apps → **The Super Agent** → Autostart ON (if your phone has the option)
+2. Battery → **Unrestricted / No restrictions** for the app
 3. Settings → Privacy → **Notification access** → The Super Agent → ON
 4. Settings → Accessibility → **The Super Agent** → ON
 5. **Display over other apps** → ON
@@ -104,8 +104,8 @@ JDK 17 → Gradle 8.7 → `assembleDebug` → rename → delete old releases/tag
 
 ## 🐞 Bug Fixes (v5.0 pack)
 - NotificationListener crash on Android 14 (null extras guard)
-- HyperOS foreground service (FOREGROUND_SERVICE_IMMEDIATE + fallback)
-- EncryptedSharedPreferences Redmi 15C (custom MasterKey alias + fallback prefs)
+- Foreground service start fallback (FOREGROUND_SERVICE_IMMEDIATE + fallback)
+- EncryptedSharedPreferences keystore failure (custom MasterKey alias + fallback prefs)
 - MediaSession permission graceful fail
 - WhatsApp group title detection
 - Spotify album-art OOM (nullable + downsample)

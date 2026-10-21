@@ -48,15 +48,6 @@ jobs:
           cp app/build/outputs/apk/debug/app-debug.apk TheSuperAgent-Latest.apk
           cp app/build/outputs/apk/debug/app-debug.apk TheSuperAgent-v${VER}-${DATE}.apk
 
-      - name: Delete old releases (keep history clean)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release list --limit 100 --json tagName --jq '.[].tagName' | while read -r tag; do
-            gh release delete "$tag" --yes --cleanup-tag || true
-          done
-          git push origin --delete $(git tag -l) 2>/dev/null || true
-
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
@@ -64,7 +55,7 @@ jobs:
           name: The Super Agent v${{ github.run_number }}
           body: |
             ## The Super Agent — build ${{ github.run_number }}
-            **Owner:** pakyji · **Device target:** Redmi 15C (HyperOS)
+            **Owner:** pakyji · **Min Android:** 8.0
 
             ### Features
             - Standalone OpenRouter intelligence (encrypted key store, model picker, offline fallback)
@@ -81,12 +72,12 @@ jobs:
             1. Download `TheSuperAgent-Latest.apk`
             2. Allow install from unknown sources
             3. Open app → grant permissions → Settings tab → paste OpenRouter API key
-            4. HyperOS: Autostart ON, Battery No restrictions, Notification access ON, Accessibility ON, Overlay ON, Usage access ON
+            4. Phone settings: Autostart ON, Battery No restrictions, Notification access ON, Accessibility ON, Overlay ON, Usage access ON
 
             ### Bugfixes in this line
             - NotificationListener Android 14 null-extras guard
-            - HyperOS foreground service FOREGROUND_SERVICE_IMMEDIATE + fallback
-            - EncryptedSharedPreferences Redmi keystore bug → custom MasterKey alias + plain-prefs fallback
+            - Foreground service start fallback (FOREGROUND_SERVICE_IMMEDIATE)
+            - EncryptedSharedPreferences keystore failure → custom MasterKey alias + plain-prefs fallback
             - MediaSession graceful permission fail, Spotify art OOM downsample
             - Gradle/Termux chmod fix, accessibility config flags
           files: |
