@@ -79,7 +79,7 @@ fun ChatTab(vm: AgentViewModel) {
 fun VoiceTab(vm: AgentViewModel) {
     val ctx = androidx.compose.ui.platform.LocalContext.current
     var running by remember { mutableStateOf(VoiceServiceStart.running) }
-    val levels = remember { List(16) { (kotlin.math.sin(it * 0.7f) + 1.2f) / 2.4f } }
+    val levels = remember { List(16) { (kotlin.math.sin(it * 0.7f.toDouble()).toFloat() + 1.2f) / 2.4f } }
     Column(Modifier.padding(10.dp)) {
         PanelBox {
             Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {

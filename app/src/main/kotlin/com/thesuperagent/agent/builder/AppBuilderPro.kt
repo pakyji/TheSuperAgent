@@ -67,7 +67,7 @@ object AppBuilderPro {
         val root = File(DeviceControlHub.workspace(), name)
         if (!root.exists()) return null
         val out = File(DeviceControlHub.workspace(), "$name.zip")
-        runCatching {
+        val ok = runCatching {
             ZipOutputStream(out.outputStream()).use { z ->
                 root.walkTopDown().filter { it.isFile }.forEach { f ->
                     z.putNextEntry(ZipEntry(f.relativeTo(root).path))
@@ -76,8 +76,12 @@ object AppBuilderPro {
                 }
             }
             log("zip ready: ${out.name} (${out.length()} bytes)")
-        }.onFailure { log("zip failed: ${it.message}", false); return null }
-        return out
+            true
+        }.getOrElse {
+            log("zip failed: ${it.message}", false)
+            false
+        }
+        return if (ok) out else null
     }
 
     /** Auto-fix suggestions based on prompt analysis. */

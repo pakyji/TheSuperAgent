@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.File
 import java.net.URL
 import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import org.json.JSONObject
 
@@ -52,20 +53,25 @@ object FileVault {
     fun encryptFile(rel: String): String = runCatching {
         val f = File(DeviceControlHub.workspace(), rel)
         if (!f.exists()) return "File not found: $rel"
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
         cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(keyBytes(), "AES"))
         val out = File(f.parentFile, f.name + ".vault")
-        out.writeBytes(cipher.doFinal(f.readBytes()))
+        // store the random IV in front of the ciphertext
+        out.writeBytes(cipher.iv + cipher.doFinal(f.readBytes()))
         "Encrypted: ${out.name}"
     }.getOrDefault("Encryption failed.")
 
     fun decryptFile(rel: String): String = runCatching {
         val f = File(DeviceControlHub.workspace(), rel)
         if (!f.exists()) return "File not found: $rel"
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes(), "AES"))
+        val raw = f.readBytes()
+        val ivLen = 12
+        if (raw.size <= ivLen) return "Not a valid vault file: $rel"
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.DECRYPT_MODE, SecretKeySpec(keyBytes(), "AES"),
+            GCMParameterSpec(128, raw, 0, ivLen))
         val out = File(f.parentFile, f.name.removeSuffix(".vault"))
-        out.writeBytes(cipher.doFinal(f.readBytes()))
+        out.writeBytes(cipher.doFinal(raw, ivLen, raw.size - ivLen))
         "Decrypted: ${out.name}"
     }.getOrDefault("Decryption failed.")
 }
