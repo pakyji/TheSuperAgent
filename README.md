@@ -120,9 +120,6 @@ JDK 17 → Gradle 8.7 → `assembleDebug` → rename → delete old releases/tag
 ## 🗺️ Roadmap
 - On-device whisper STT · cross-device sync · plugin marketplace · wearable companion
 
-## 🤝 Contributing
-Fork → branch → PR. Keep it root-free and official-API-only.
-
 ## 📄 License
 MIT © pakyji
 
